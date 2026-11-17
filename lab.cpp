@@ -155,25 +155,28 @@ void binSearchList(spis *head){
     for(p = head->next; p; p=p->next, i++){cout << i << ") " << p->data->title << endl;}
 }
 
-spis* binSearch(spis *head, Book** a, int R, const char* fam){
+spis* binSearch(spis *head, Book** a, int R, const char* fam2){
+    char fam[4];
+    strncpy(fam, fam2, 3);
+    fam[3] = '\0';
     int i;
     char* b[4000];
-    for(i = 0; i < 4000; i++){ b[i] = surname(a[i]->title); }
+    for(i = 0; i < 4000; i++){ b[i] = surname(a[i]->title);  }
     int L = 0;
     int m;
 
     while(L < R){
         m = (L + R) / 2;
         //printf("%s %s\n", b[m], fam);
-        if(strcmp(b[m], fam) < 0){ L = m + 1; }
+        if(strncmp(b[m], fam,3) < 0){ L = m + 1; }
         else{R = m;}
     }
 
-    if(R < 4000 && strcmp(b[R], fam) == 0){
+    if(R < 4000 && strncmp(b[R], fam,3) == 0){
         spis *result = nullptr;
         spis *tail = nullptr;
 
-        for(int k = R; k < 4000 && strcmp(b[k], fam) == 0; k++){
+        for(int k = R; k < 4000 && strncmp(b[k], fam,3) == 0; k++){
             spis *node = new spis;
             node->data = a[k];
             node->next = nullptr;
@@ -363,8 +366,9 @@ int main(){
     cout << "key: ";
     char key[64];
     cin >> key;
+    key[3]='\0';
     spis *found = binSearch(p2, b, 4000, key);
-    if(found){prnt(found);}
+    //if(found){prnt(found);}
 
     Tree *rootAVL = NULL;
     for(spis *q = found; q != NULL; q = q->next){
