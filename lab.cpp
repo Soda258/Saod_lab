@@ -347,6 +347,34 @@ void printLR(Tree *root) {
     printLR_2(root, i, c);
 }
 
+void searchTree(Tree* root, int year) {
+    if (root == nullptr) {
+        std::cout << "House with  " << year << " not found.\n";
+        return;
+    }
+
+    if (year == root->data->year){
+        int counter = 1;
+        Book* p = root->data;
+        cout << "\n   Author       | Title                            | Publisher        | Year | Pages" << endl;
+        cout << "----------------+----------------------------------+------------------+------+------" << endl;
+        printf("%d) %-12s | %-32s | %-16s | %4hd | %4hd\n",counter++,
+               p->author, p->title, p->publisher, p->year, p->pages);
+
+        for (spis* curr = root->mid; curr != nullptr; curr = curr->next) {
+            Book* p_mid = curr->data;
+            printf("%d) %-12s | %-32s | %-16s | %4hd | %4hd\n",counter++,
+               p_mid->author, p_mid->title, p_mid->publisher, p_mid->year, p_mid->pages);
+        }
+    }
+    else if (year < root->data->year) {
+        searchTree(root->left, year);
+    }
+    else {
+        searchTree(root->right, year);
+    }
+}
+
 int main(){
     FILE *fp;
     fp = fopen("testBase1.dat", "rb");
@@ -376,7 +404,11 @@ int main(){
     
     printf("\nAVL:\n");
     printLR(rootAVL);
-    
+    int yearKey;
+    cout << "Poisk po derevu (year):";
+    cin >> yearKey;
+
+    searchTree(rootAVL, yearKey);
     
     return 0;
 }
